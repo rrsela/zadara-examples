@@ -5,7 +5,7 @@ write_files:
     permissions: '0644'
     content: |
       write-kubeconfig-mode: "0644"
-      selinux: true 
+      selinux: false 
       cni: ${ cni }
       token: ${ token }
       cloud-provider-name: aws
