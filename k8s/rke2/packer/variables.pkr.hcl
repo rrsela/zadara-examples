@@ -54,7 +54,7 @@ variable "ssh_keypair_name" {
 
 variable "rke2_k8s_version" {
   type        = string
-  default     = "v1.23.4"
+  default     = "v1.27.2"
   description = "RKE2 k8s version"
 }
 
