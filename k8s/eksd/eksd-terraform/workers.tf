@@ -1,5 +1,5 @@
 module "worker_instance_profile" {
-  # count             = var.worker_instance_profile == null ? 1 : 0
+  count             = var.worker_instance_profile == null ? 1 : 0
   source            = "./modules/instance-profile"
   iam_policy        = local.iam_policy
   iam_role_name     = var.worker_iam_role == null ? "${var.environment}-workers-role" : var.worker_iam_role

@@ -72,8 +72,7 @@ resource "random_password" "random_cluster_certificate" {
 }
 
 module "master_instance_profile" {
-  #TODO
-  # count             = var.master_instance_profile == null ? 1 : 0
+  count             = var.master_instance_profile == null ? 1 : 0
   source            = "./modules/instance-profile"
   iam_policy        = local.iam_policy
   iam_role_name     = var.master_iam_role == null ? "${var.environment}-masters-role" : var.master_iam_role

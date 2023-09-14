@@ -4,11 +4,13 @@ variable "api_endpoint" {
 }
 
 variable "cluster_access_key" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "cluster_access_secret_id" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "environment" {
