@@ -1,5 +1,5 @@
 output "api_endpoint" {
-  value = var.api_endpoint
+  value = "${var.api_endpoint}"
 }
 
 output "environment" {
@@ -31,7 +31,7 @@ output "masters_load_balancer_internal_dns" {
 }
 
 output "bastion_ip" {
-  value = aws_eip.bastion.public_ip
+  value = "${aws_eip.bastion.public_ip}"
 }
 
 output "x_loadbalancer_script" {
