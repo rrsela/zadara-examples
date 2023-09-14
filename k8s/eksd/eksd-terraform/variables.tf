@@ -4,13 +4,11 @@ variable "api_endpoint" {
 }
 
 variable "cluster_access_key" {
-  type      = string
-  sensitive = true
+  type = string
 }
 
 variable "cluster_access_secret_id" {
-  type      = string
-  sensitive = true
+  type = string
 }
 
 variable "environment" {
@@ -35,26 +33,26 @@ variable "workers_volume_size" {
 }
 
 variable "masters_count" {
-  type    = number
-  default = 1
+  type        = number
+  default     = 1
   description = "Initial masters ASG capacity"
 }
 
 variable "masters_addition" {
-  type    = number
-  default = 0
+  type        = number
+  default     = 0
   description = "Maximal increased capacity to masters ASG above initial size"
 }
 
 variable "workers_count" {
-  type    = number
-  default = 1
+  type        = number
+  default     = 1
   description = "Initial workers ASG capacity"
 }
 
 variable "workers_addition" {
-  type    = number
-  default = 3
+  type        = number
+  default     = 3
   description = "Maximal increased capacity to workers ASG above initial size"
 }
 
