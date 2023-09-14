@@ -19,7 +19,7 @@ bastion_user=$6
 bastion_key=$7
 
 # Get the private IP based on the private DNS of the LoadBalancer
-private_ip=$(ssh -i $bastion_key -o StrictHostKeyChecking=no $bastion_user@$bastion_ip "getent hosts $loadbalancer_dns | awk '{ print \$1 }'")
+private_ip=$(ssh -i $bastion_key -o StrictHostKeyChecking=no $bastion_user@$bastion_ip "getent hosts $loadbalancer_dns")
 
 # Install the AWS CLI on the bastion VM
 ssh -T -i $bastion_key -o StrictHostKeyChecking=no $bastion_user@$bastion_ip<< EOF

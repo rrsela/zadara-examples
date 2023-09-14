@@ -25,9 +25,9 @@ terraform init --reconfigure
 terraform apply -compact-warnings --auto-approve -var-file ../terraform.tfvars -var "cluster_access_key=$access_key" -var "cluster_access_secret_id=$secret_key"
 terraform apply -compact-warnings --auto-approve -var-file ../terraform.tfvars -var "cluster_access_key=$access_key" -var "cluster_access_secret_id=$secret_key"
 terraform output > ../infra.tfvars
-api_endpoint=$(terraform output api_endpoint)
-bastion_ip=$(terraform output bastion_ip)
-masters_load_balancer_internal_dns=$(terraform output masters_load_balancer_internal_dns)
+api_endpoint=$(terraform output -raw api_endpoint)
+bastion_ip=$(terraform output -raw bastion_ip)
+masters_load_balancer_internal_dns=$(terraform output -raw masters_load_balancer_internal_dns)
 
 # Step 1.5 - get NLB IPs
 cd ..
