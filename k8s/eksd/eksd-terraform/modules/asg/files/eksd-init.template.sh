@@ -112,6 +112,7 @@ local_cp_node_wait() {
 
       # Leader is initializing cluster
       info "Installing Kubernetes version $kube_ver"
+      info "Liron added - this it the url of controlPlaneEndpoint $server_url"
       sudo kubeadm init \
         --config /etc/kubernetes/zadara/kubeadm-config.yaml \
         --upload-certs
