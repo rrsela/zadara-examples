@@ -19,9 +19,14 @@ write_files:
         - name: cloud-config
           configMap:
             name: cloud-config
+        - name: trusted-root-cas
+          hostPath: /etc/ssl/certs
+          type: folder
       extraVolumeMounts:
         - name: cloud-config
           mountPath: config
+        - name: trusted-root-cas
+          mountPath: /etc/ssl/certs
   - path: /etc/cron.d/eksd-reload-certs
     owner: root:root
     permissions: "0644"
