@@ -1,7 +1,3 @@
-data "file" "root_ca_cert" {
-  source = var.root_ca_cert_path
-}
-
 resource "aws_eip" "bastion" {
   instance = aws_instance.bastion.id
   vpc      = true
@@ -18,7 +14,7 @@ resource "aws_instance" "bastion" {
   user_data              = <<-EOF
                     #!/bin/bash
                     set -e
-                    cat ${data.file.root_ca_cert.content} > /usr/local/share/ca-certificates/root_ca.crt
+                    cat ${file(var.root_ca_cert_path)} > /usr/local/share/ca-certificates/root_ca.crt
                     update-ca-certificates
                   EOF
   tags = {
