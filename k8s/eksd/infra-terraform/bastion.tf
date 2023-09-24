@@ -3,7 +3,7 @@ data "cloudinit_config" "root-ca-trust-config" {
   base64_encode = true
   part {
     content_type = "text/cloud-config"
-    content      = <<EOF
+    content      = <<-EOF
       #cloud-config
       ca-certs:
         trusted:
