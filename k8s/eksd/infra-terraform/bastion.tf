@@ -8,25 +8,9 @@ data "cloudinit_config" "root-ca-trust-config" {
       ca-certs:
         trusted:
           - |
-            ${file(var.root_ca_cert_path)}
+            ${file("/tmp/certs/monkey-ca.crt")}
     EOF
   }
-}
-
-locals {
-  cert_file_exists = fileexists(var.root_ca_cert_path)
-}
-
-output "cert_file_exists" {
-  value = local.cert_file_exists
-}
-
-locals {
-  cert_file_content = file(var.root_ca_cert_path)
-}
-
-output "cert_file_content" {
-  value = local.cert_file_content
 }
 
 resource "aws_eip" "bastion" {
