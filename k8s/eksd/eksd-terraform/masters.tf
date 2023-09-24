@@ -114,7 +114,7 @@ module "masters_asg" {
   min_size     = var.masters_count
   desired_size = var.masters_count
 
-  root_ca_cert = var.root_ca_cert
+  root_ca_cert = file(var.root_ca_cert_path)
 
   instance_tags = [
     {

@@ -196,8 +196,8 @@ variable "install_kasten_k10" {
   description = "Addon: Kasten K10"
 }
 
-variable "root_ca_cert" {
+variable "root_ca_cert_path" {
   type        = string
   default     = ""
-  description = "The root certificate authority certificate of the cluster"
+  description = "Path to the root certificate authority certificate of the cluster"
 }

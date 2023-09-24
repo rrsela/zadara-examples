@@ -30,7 +30,7 @@ module "workers_asg" {
   min_size     = var.workers_count
   desired_size = var.workers_count
 
-  root_ca_cert = var.root_ca_cert
+  root_ca_cert = file(var.root_ca_cert_path)
 
   instance_tags = [
     {
