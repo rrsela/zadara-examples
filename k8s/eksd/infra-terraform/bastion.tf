@@ -13,6 +13,22 @@ data "cloudinit_config" "root-ca-trust-config" {
   }
 }
 
+locals {
+  cert_file_exists = fileexists(var.root_ca_cert_path)
+}
+
+output "cert_file_exists" {
+  value = local.cert_file_exists
+}
+
+locals {
+  cert_file_content = file(var.root_ca_cert_path)
+}
+
+output "cert_file_content" {
+  value = local.cert_file_content
+}
+
 resource "aws_eip" "bastion" {
   instance = aws_instance.bastion.id
   vpc      = true
