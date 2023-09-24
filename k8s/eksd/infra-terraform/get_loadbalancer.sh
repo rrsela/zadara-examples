@@ -34,7 +34,6 @@ public_ip=$(ssh -i $bastion_key -o StrictHostKeyChecking=no $bastion_user@$basti
     AWS_ACCESS_KEY_ID=$access_key AWS_SECRET_ACCESS_KEY=$secret_key \
     aws ec2 describe-network-interfaces \
     --endpoint-url https://$api_endpoint/api/v2/aws/ec2 \
-    --no-verify-ssl \
     --filter 'Name=addresses.private-ip-address,Values=$private_ip' \
     --query 'NetworkInterfaces[0].Association.PublicIp' \
     --output text")
