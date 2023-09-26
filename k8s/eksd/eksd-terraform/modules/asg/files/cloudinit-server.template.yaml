@@ -64,7 +64,7 @@ write_files:
           %{~ endfor ~}
       imageRepository: "public.ecr.aws/eks-distro/kubernetes"
       clusterName: "${ cluster_name }"
-ca-certs:
+ca_certs:
   trusted:
     - |
-      ${root_ca_cert}
+      "${root_ca_cert}"
