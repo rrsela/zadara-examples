@@ -11,6 +11,9 @@ data "cloudinit_config" "root-ca-trust-config" {
         file(var.root_ca_cert_path)
       ]
     }
+    runcmd = [
+      "export AWS_CA_BUNDLE=/etc/ssl/certs/ca-certificate.crt"
+    ]
 })}
     EOF
 }
