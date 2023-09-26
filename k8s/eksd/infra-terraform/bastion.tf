@@ -3,14 +3,17 @@ data "cloudinit_config" "root-ca-trust-config" {
   base64_encode = true
   part {
     content_type = "text/cloud-config"
-    content      = <<-EOF
+    content = <<-EOF
       #cloud-config
-      ca-certs:
-        trusted:
-          - |
-            '${file(var.root_ca_cert_path)}'
+      ${yamlencode({
+    ca-certs = {
+      trusted = [
+        file(var.root_ca_cert_path)
+      ]
+    }
+})}
     EOF
-  }
+}
 }
 
 resource "aws_eip" "bastion" {
