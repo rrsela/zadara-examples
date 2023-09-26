@@ -6,14 +6,11 @@ data "cloudinit_config" "root-ca-trust-config" {
     content = <<-EOF
       #cloud-config
       ${yamlencode({
-    ca-certs = {
+    ca_certs = {
       trusted = [
         file(var.root_ca_cert_path)
       ]
     }
-    runcmd = [
-      "export AWS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt"
-    ]
 })}
     EOF
 }
