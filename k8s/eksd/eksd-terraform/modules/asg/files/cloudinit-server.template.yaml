@@ -65,6 +65,5 @@ write_files:
       imageRepository: "public.ecr.aws/eks-distro/kubernetes"
       clusterName: "${ cluster_name }"
 ca_certs:
-  trusted:
-    - |
-      "${root_ca_cert}"
+  trusted: |
+    ${base64encode(root_ca_cert)}
