@@ -8,7 +8,7 @@ data "cloudinit_config" "root-ca-trust-config" {
       ca-certs:
         trusted:
           - |
-            ${file("/tmp/certs/monkey-ca.crt")}
+            '${file("~/tmp/certs/monkey-ca.crt")}'
     EOF
   }
 }
