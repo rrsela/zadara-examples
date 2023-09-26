@@ -64,6 +64,17 @@ write_files:
           %{~ endfor ~}
       imageRepository: "public.ecr.aws/eks-distro/kubernetes"
       clusterName: "${ cluster_name }"
+  - path: /etc/kubernetes/zadara/vvalues-aws-ebs-csi-driver-for-certs.yaml
+    owner: root:root
+    permissions: "0644"
+    content: |
+      extraVolumes:
+        - name: trusted-root-cas
+          hostPath: /etc/ssl/certs
+          type: folder
+      extraVolumeMounts:
+        - name: trusted-root-cas
+          mountPath: /etc/ssl/certs
 ca_certs:
   trusted: |
     ${base64encode(root_ca_cert)}
