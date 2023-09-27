@@ -64,7 +64,7 @@ write_files:
           %{~ endfor ~}
       imageRepository: "public.ecr.aws/eks-distro/kubernetes"
       clusterName: "${ cluster_name }"
-  - path: /etc/kubernetes/zadara/vvalues-aws-ebs-csi-driver-for-certs.yaml
+  - path: /etc/kubernetes/zadara/values-aws-ebs-csi-driver-for-certs.yaml
     owner: root:root
     permissions: "0644"
     content: |
