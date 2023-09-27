@@ -20,13 +20,14 @@ write_files:
           configMap:
             name: cloud-config
         - name: trusted-root-cas
-          hostPath: /etc/ssl/certs
-          type: folder
+          hostPath:
+            path: /etc/ssl/certs/ca-certificates.crt
+          type: file
       extraVolumeMounts:
         - name: cloud-config
           mountPath: config
         - name: trusted-root-cas
-          mountPath: /etc/ssl/certs
+          mountPath: /etc/ssl/certs/monkey-ca.crt
   - path: /etc/cron.d/eksd-reload-certs
     owner: root:root
     permissions: "0644"
@@ -68,13 +69,15 @@ write_files:
     owner: root:root
     permissions: "0644"
     content: |
-      extraVolumes:
-        - name: trusted-root-cas
-          hostPath: /etc/ssl/certs
-          type: folder
-      extraVolumeMounts:
-        - name: trusted-root-cas
-          mountPath: /etc/ssl/certs
+      controller:
+        volumes:
+          - name: trusted-root-cas
+            hostPath:
+              path: /etc/ssl/certs/ca-certificates.crt
+              type: File
+        volumeMounts:
+          - name: trusted-root-cas
+            mountPath: /etc/ssl/certs/monkey-ca.crt
 ca_certs:
   trusted: |
-    ${base64encode(root_ca_cert)}
+    ${indent(4, root_ca_cert)}
