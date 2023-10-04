@@ -1,21 +1,3 @@
-data "cloudinit_config" "root-ca-trust-config" {
-  gzip          = true
-  base64_encode = true
-  part {
-    content_type = "text/cloud-config"
-    content = <<-EOF
-      #cloud-config
-      ${yamlencode({
-    ca_certs = {
-      trusted = [
-        file(var.root_ca_cert_path)
-      ]
-    }
-})}
-    EOF
-}
-}
-
 resource "aws_eip" "bastion" {
   instance = aws_instance.bastion.id
   vpc      = true
@@ -29,7 +11,6 @@ resource "aws_instance" "bastion" {
   key_name               = var.bastion_keyname
   subnet_id              = aws_subnet.eksd_public.id
   vpc_security_group_ids = [aws_security_group.eksd_k8s.id]
-  user_data              = data.cloudinit_config.root-ca-trust-config.rendered
 
   tags = {
     Name = "bastion"
