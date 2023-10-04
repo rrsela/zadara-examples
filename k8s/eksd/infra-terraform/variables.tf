@@ -68,5 +68,6 @@ variable "bastion_instance_type" {
 
 variable "root_ca_cert_path" {
   type        = string
+  default     = ""
   description = "Path to the root certificate authority certificate of the cluster"
 }

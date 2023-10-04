@@ -110,11 +110,11 @@ module "masters_asg" {
   install_autoscaler    = var.install_autoscaler
   install_kasten_k10    = var.install_kasten_k10
 
-  max_size     = var.masters_count+var.masters_addition
+  max_size     = var.masters_count + var.masters_addition
   min_size     = var.masters_count
   desired_size = var.masters_count
 
-  root_ca_cert = file(var.root_ca_cert_path)
+  root_ca_cert = var.root_ca_cert_path == "" ? "" : file(var.root_ca_cert_path)
 
   instance_tags = [
     {
