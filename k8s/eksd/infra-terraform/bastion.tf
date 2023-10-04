@@ -1,7 +1,6 @@
 resource "aws_eip" "bastion" {
-  instance = aws_instance.bastion.id
-  vpc      = true
-
+  instance   = aws_instance.bastion.id
+  vpc        = true
   depends_on = [aws_vpc.eksd_vpc, aws_subnet.eksd_public, aws_subnet.eksd_private]
 }
 
