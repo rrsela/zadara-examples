@@ -31,10 +31,9 @@ EOF
 
 # Invoke AWS CLI to get the public IP of the LoadBalancer
 public_ip=$(ssh -i $bastion_key -o StrictHostKeyChecking=no $bastion_user@$bastion_ip "\
-    AWS_ACCESS_KEY_ID=$access_key AWS_SECRET_ACCESS_KEY=$secret_key \
+    AWS_ACCESS_KEY_ID=$access_key AWS_SECRET_ACCESS_KEY=$secret_key AWS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
     aws ec2 describe-network-interfaces \
     --endpoint-url https://$api_endpoint/api/v2/aws/ec2 \
-    --no-verify-ssl \
     --filter 'Name=addresses.private-ip-address,Values=$private_ip' \
     --query 'NetworkInterfaces[0].Association.PublicIp' \
     --output text")

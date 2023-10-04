@@ -27,7 +27,7 @@ write_files:
         - name: cloud-config
           mountPath: config
         - name: trusted-root-cas
-          mountPath: /etc/ssl/certs/monkey-ca.crt
+          mountPath: /etc/ssl/certs/zadara-ca.crt
   - path: /etc/cron.d/eksd-reload-certs
     owner: root:root
     permissions: "0644"
@@ -77,7 +77,7 @@ write_files:
               type: File
         volumeMounts:
           - name: trusted-root-cas
-            mountPath: /etc/ssl/certs/monkey-ca.crt
+            mountPath: /etc/ssl/certs/zadara-ca.crt
 ca_certs:
   trusted: |
     ${indent(4, root_ca_cert)}
