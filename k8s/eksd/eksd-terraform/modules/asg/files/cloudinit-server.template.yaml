@@ -78,6 +78,20 @@ write_files:
         volumeMounts:
           - name: trusted-root-cas
             mountPath: /etc/ssl/certs/zadara-ca.crt
+  - path: /etc/kubernetes/zadara/values-cluster-autoscaler-for-certs.yaml
+    owner: root:root
+    permissions: "0644"
+    content: |
+      controller:
+        extraVolumes:
+          - name: trusted-root-cas
+            hostPath:
+              path: /etc/ssl/certs/ca-certificates.crt
+              type: File
+        extraVolumeMounts:
+          - name: trusted-root-cas
+            mountPath: /etc/ssl/certs/zadara-ca.crt
+
 ca_certs:
   trusted: |
     ${indent(4, root_ca_cert)}

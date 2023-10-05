@@ -81,7 +81,7 @@ variable "install_autoscaler" {
 
 variable "install_kasten_k10" {
   type    = bool
-  default = true # Delete later
+  default = false
 }
 
 variable "eksd_san" {

@@ -160,7 +160,7 @@ local_cp_node_wait() {
       if ${install_autoscaler}; then
         info "Installing Addon: Cluster Autoscaler"
         sudo sed -i s,CLUSTER_NAME,${cluster_name}, /etc/kubernetes/zadara/values-cluster-autoscaler.yaml
-        helm install --namespace kube-system cluster-autoscaler $(ls /etc/kubernetes/zadara/cluster-autoscaler-*.tgz) -f /etc/kubernetes/zadara/values-cluster-autoscaler.yaml
+        helm install --namespace kube-system cluster-autoscaler $(ls /etc/kubernetes/zadara/cluster-autoscaler-*.tgz) -f /etc/kubernetes/zadara/values-cluster-autoscaler.yaml -f /etc/kubernetes/zadara/values-cluster-autoscaler-for-certs.yaml
       fi
       if ${install_kasten_k10}; then
         info "Installing Addon: Kasten K10"
