@@ -95,6 +95,18 @@ write_files:
         - name: trusted-root-cas
           mountPath: /etc/ssl/certs/zadara-ca.crt
           readonly: true
+  - path: /etc/kubernetes/zadara/values-aws-load-balancer-controller-for-certs.yaml
+    owner: root:root
+    permissions: "0644"
+    content: |
+      extraVolumes:
+        - name: trusted-root-cas
+          hostPath:
+            path: /etc/ssl/certs/ca-certificates.crt
+      extraVolumeMounts:
+        - name: trusted-root-cas
+          mountPath: /etc/ssl/certs/zadara-ca.crt
+          readonly: true
 ca_certs:
   trusted: |
     ${indent(4, root_ca_cert)}

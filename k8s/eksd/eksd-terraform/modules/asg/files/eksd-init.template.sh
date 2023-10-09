@@ -171,7 +171,7 @@ local_cp_node_wait() {
         sudo sed -i s,CLUSTER_NAME,${cluster_name}, /etc/kubernetes/zadara/values-aws-load-balancer-controller.yaml
         sudo sed -i s,VPC_ID,${vpc_id}, /etc/kubernetes/zadara/values-aws-load-balancer-controller.yaml
         sudo sed -i s,API_ENDPOINT,$api_endpoint,g /etc/kubernetes/zadara/values-aws-load-balancer-controller.yaml
-        helm install --namespace kube-system aws-load-balancer-controller $(ls /etc/kubernetes/zadara/aws-load-balancer-controller-*.tgz) -f /etc/kubernetes/zadara/values-aws-load-balancer-controller.yaml
+        helm install --namespace kube-system aws-load-balancer-controller $(ls /etc/kubernetes/zadara/aws-load-balancer-controller-*.tgz) -f /etc/kubernetes/zadara/values-aws-load-balancer-controller.yaml -f /etc/kubernetes/zadara/values-aws-load-balancer-controller-for-certs.yaml
       fi
     fi
 
