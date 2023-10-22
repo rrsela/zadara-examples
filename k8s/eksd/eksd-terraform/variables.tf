@@ -35,26 +35,26 @@ variable "workers_volume_size" {
 }
 
 variable "masters_count" {
-  type    = number
-  default = 1
+  type        = number
+  default     = 1
   description = "Initial masters ASG capacity"
 }
 
 variable "masters_addition" {
-  type    = number
-  default = 0
+  type        = number
+  default     = 0
   description = "Maximal increased capacity to masters ASG above initial size"
 }
 
 variable "workers_count" {
-  type    = number
-  default = 1
+  type        = number
+  default     = 1
   description = "Initial workers ASG capacity"
 }
 
 variable "workers_addition" {
-  type    = number
-  default = 3
+  type        = number
+  default     = 3
   description = "Maximal increased capacity to workers ASG above initial size"
 }
 
@@ -194,4 +194,10 @@ variable "install_kasten_k10" {
   type        = bool
   default     = false
   description = "Addon: Kasten K10"
+}
+
+variable "root_ca_cert_path" {
+  type        = string
+  default     = ""
+  description = "Path to the root certificate authority certificate of the cluster"
 }

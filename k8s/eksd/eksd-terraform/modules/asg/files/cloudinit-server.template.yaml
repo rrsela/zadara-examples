@@ -2,7 +2,7 @@
 write_files:
   - path: /etc/kubernetes/zadara/values-aws-cloud-controller.yaml
     owner: root:root
-    permissions: '0644'
+    permissions: "0644"
     content: |
       args:
         - --v=2
@@ -19,16 +19,22 @@ write_files:
         - name: cloud-config
           configMap:
             name: cloud-config
+        - name: trusted-root-cas
+          hostPath:
+            path: /etc/ssl/certs/ca-certificates.crt
+          type: file
       extraVolumeMounts:
         - name: cloud-config
           mountPath: config
+        - name: trusted-root-cas
+          mountPath: /etc/ssl/certs/zadara-ca.crt
   - path: /etc/cron.d/eksd-reload-certs
     owner: root:root
-    permissions: '0644'
+    permissions: "0644"
     content: "0 */1 * * * root kubeadm init phase upload-certs --upload-certs --certificate-key ${ certificate } \n"
   - path: /etc/kubernetes/zadara/kubeadm-config.yaml
     owner: root:root
-    permissions: '0644'
+    permissions: "0644"
     content: |
       apiVersion: kubeadm.k8s.io/v1beta3
       kind: InitConfiguration
@@ -59,3 +65,48 @@ write_files:
           %{~ endfor ~}
       imageRepository: "public.ecr.aws/eks-distro/kubernetes"
       clusterName: "${ cluster_name }"
+  - path: /etc/kubernetes/zadara/values-aws-ebs-csi-driver-for-certs.yaml
+    owner: root:root
+    permissions: "0644"
+    content: |
+      controller:
+        volumes:
+          - name: trusted-root-cas
+            hostPath:
+              path: /etc/ssl/certs/ca-certificates.crt
+              type: File
+        volumeMounts:
+          - name: trusted-root-cas
+            mountPath: /etc/ssl/certs/zadara-ca.crt
+  - path: /etc/kubernetes/zadara/values-cluster-autoscaler-for-certs.yaml
+    owner: root:root
+    permissions: "0644"
+    content: |
+      extraVolumes:
+        - name: cloud-config
+          configMap:
+            name: cloud-config
+        - name: trusted-root-cas
+          hostPath:
+            path: /etc/ssl/certs/ca-certificates.crt
+      extraVolumeMounts:
+        - name: cloud-config
+          mountPath: config
+        - name: trusted-root-cas
+          mountPath: /etc/ssl/certs/zadara-ca.crt
+          readonly: true
+  - path: /etc/kubernetes/zadara/values-aws-load-balancer-controller-for-certs.yaml
+    owner: root:root
+    permissions: "0644"
+    content: |
+      extraVolumes:
+        - name: trusted-root-cas
+          hostPath:
+            path: /etc/ssl/certs/ca-certificates.crt
+      extraVolumeMounts:
+        - name: trusted-root-cas
+          mountPath: /etc/ssl/certs/zadara-ca.crt
+          readonly: true
+ca_certs:
+  trusted: |
+    ${indent(4, root_ca_cert)}
