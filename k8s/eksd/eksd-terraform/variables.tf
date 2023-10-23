@@ -24,6 +24,18 @@ variable "eksd_ami" {
   description = "AWS id of the EKS-D image to be used for all Kubernetes nodes"
 }
 
+variable "masters_eksd_ami" {
+  type        = string
+  default     = null
+  description = "AWS id of the EKS-D image to be used for all control-plane Kubernetes nodes"
+}
+
+variable "workers_eksd_ami" {
+  type        = string
+  default     = null
+  description = "AWS id of the EKS-D image to be used for all data-plane Kubernetes nodes"
+}
+
 variable "masters_volume_size" {
   type    = string
   default = "50"

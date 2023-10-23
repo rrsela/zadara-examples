@@ -88,7 +88,7 @@ module "masters_asg" {
   source                = "./modules/asg"
   cluster_name          = var.environment
   group_name            = "${var.environment}-master"
-  image_id              = var.eksd_ami
+  image_id              = var.masters_eksd_ami == null ? var.eksd_ami : var.masters_eksd_ami
   instance_type         = var.masters_instance_type
   instance_profile      = local.masters_instance_profile
   key_pair_name         = var.masters_keyname
