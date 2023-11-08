@@ -204,7 +204,7 @@ variable "install_autoscaler" {
 
 variable "install_kasten_k10" {
   type        = bool
-  default     = true
+  default     = false
   description = "Addon: Kasten K10"
 }
 
