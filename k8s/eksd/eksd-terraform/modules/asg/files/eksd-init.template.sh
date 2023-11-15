@@ -24,8 +24,13 @@ timestamp() {
 elect_leader() {
   # Fetch other running instances in ASG
   instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-  instances=$(aws autoscaling describe-auto-scaling-groups --endpoint-url "$api_endpoint/api/v2/aws/autoscaling" --ca-bundle "/etc/ssl/certs/ca-certificates.crt" --auto-scaling-group-name "${asg_name}" --query 'AutoScalingGroups[*].Instances[?HealthStatus==`Healthy`].InstanceId' --output text)
-  sorted_instances=$(aws ec2 describe-instances --endpoint-url "$api_endpoint/api/v2/aws/ec2" --ca-bundle "/etc/ssl/certs/ca-certificates.crt" --instance-ids $(echo $instances) | jq -r '.Reservations[].Instances[] | "{\"Name\": \"\(.Tags[] | select(.Key == "Name") | .["Name"] = .Value | .Name)\", \"Id\": \"\(.InstanceId)\"}"' | jq -s '.[] | { id: .Id, name: .Name, idx: (.Name | capture("(?<v>[[:digit:].]+)$").v)}' | jq -s -c 'sort_by(.idx)')
+
+  if [ -n {$root_ca_cert} ]; then
+    AWS_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+  fi
+
+  instances=$(aws autoscaling describe-auto-scaling-groups --endpoint-url "$api_endpoint/api/v2/aws/autoscaling" --auto-scaling-group-name "${asg_name}" --query 'AutoScalingGroups[*].Instances[?HealthStatus==`Healthy`].InstanceId' --output text)
+  sorted_instances=$(aws ec2 describe-instances --endpoint-url "$api_endpoint/api/v2/aws/ec2" --instance-ids $(echo $instances) | jq -r '.Reservations[].Instances[] | "{\"Name\": \"\(.Tags[] | select(.Key == "Name") | .["Name"] = .Value | .Name)\", \"Id\": \"\(.InstanceId)\"}"' | jq -s '.[] | { id: .Id, name: .Name, idx: (.Name | capture("(?<v>[[:digit:].]+)$").v)}' | jq -s -c 'sort_by(.idx)')
   leader_instance=$(echo $sorted_instances | jq -r '.[0].id')
 
   info "Current instance: $instance_id | Leader instance: $leader_instance"
@@ -147,7 +152,7 @@ local_cp_node_wait() {
       info "Installing CCM: AWS Cloud Provider for Kubernetes"
       sudo sed -i s,API_ENDPOINT,$api_endpoint, /etc/kubernetes/zadara/cloud-config.yaml
       kubectl apply -f /etc/kubernetes/zadara/cloud-config.yaml -n kube-system
-      helm install --namespace kube-system aws-cloud-controller-manager $(ls /etc/kubernetes/zadara/aws-cloud-controller-manager-*.tgz) -f /etc/kubernetes/zadara/values-aws-cloud-controller.yaml --wait
+      helm install --namespace kube-system aws-cloud-controller-manager $(ls /etc/kubernetes/zadara/aws-cloud-controller-manager-*.tgz) -f /etc/kubernetes/zadara/values-aws-cloud-controller.yaml
 
       # Await for cluster nodes to be ready before continuing with additional addons deployments & declare cluster is up & running
       local_cp_node_wait
@@ -158,16 +163,16 @@ local_cp_node_wait() {
         kubectl apply $(ls /etc/kubernetes/zadara/*snapshot.storage.k8s.io_*.yaml | awk ' { print " -f " $1 } ')
         kubectl apply -n kube-system -f /etc/kubernetes/zadara/rbac-snapshot-controller.yaml
         kubectl apply -n kube-system -f /etc/kubernetes/zadara/setup-snapshot-controller.yaml
-        helm install --namespace kube-system aws-ebs-csi-driver $(ls /etc/kubernetes/zadara/aws-ebs-csi-driver-*.tgz) -f /etc/kubernetes/zadara/values-aws-ebs-csi-driver.yaml -f /etc/kubernetes/zadara/values-aws-ebs-csi-driver-for-certs.yaml --wait
+        helm install --namespace kube-system aws-ebs-csi-driver $(ls /etc/kubernetes/zadara/aws-ebs-csi-driver-*.tgz) -f /etc/kubernetes/zadara/values-aws-ebs-csi-driver.yaml -f /etc/kubernetes/zadara/values-aws-ebs-csi-driver-for-certs.yaml
       fi
       if ${install_autoscaler}; then
         info "Installing Addon: Cluster Autoscaler"
         sudo sed -i s,CLUSTER_NAME,${cluster_name}, /etc/kubernetes/zadara/values-cluster-autoscaler.yaml
-        helm install --namespace kube-system cluster-autoscaler $(ls /etc/kubernetes/zadara/cluster-autoscaler-*.tgz) -f /etc/kubernetes/zadara/values-cluster-autoscaler.yaml -f /etc/kubernetes/zadara/values-cluster-autoscaler-for-certs.yaml --wait
+        helm install --namespace kube-system cluster-autoscaler $(ls /etc/kubernetes/zadara/cluster-autoscaler-*.tgz) -f /etc/kubernetes/zadara/values-cluster-autoscaler.yaml -f /etc/kubernetes/zadara/values-cluster-autoscaler-for-certs.yaml
       fi
       if ${install_kasten_k10}; then
         info "Installing Addon: Kasten K10"
-        helm install --create-namespace --namespace kasten-io k10 $(ls /etc/kubernetes/zadara/k10-*.tgz) --wait
+        helm install --create-namespace --namespace kasten-io k10 $(ls /etc/kubernetes/zadara/k10-*.tgz)
       fi
       if ${install_lb_controller}; then
         sleep 2  # allow existing helm-level installations to finish as loadbalancer resource change may affect them
@@ -175,7 +180,7 @@ local_cp_node_wait() {
         sudo sed -i s,CLUSTER_NAME,${cluster_name}, /etc/kubernetes/zadara/values-aws-load-balancer-controller.yaml
         sudo sed -i s,VPC_ID,${vpc_id}, /etc/kubernetes/zadara/values-aws-load-balancer-controller.yaml
         sudo sed -i s,API_ENDPOINT,$api_endpoint,g /etc/kubernetes/zadara/values-aws-load-balancer-controller.yaml
-        helm install --namespace kube-system aws-load-balancer-controller $(ls /etc/kubernetes/zadara/aws-load-balancer-controller-*.tgz) -f /etc/kubernetes/zadara/values-aws-load-balancer-controller.yaml -f /etc/kubernetes/zadara/values-aws-load-balancer-controller-for-certs.yaml --wait
+        helm install --namespace kube-system aws-load-balancer-controller $(ls /etc/kubernetes/zadara/aws-load-balancer-controller-*.tgz) -f /etc/kubernetes/zadara/values-aws-load-balancer-controller.yaml -f /etc/kubernetes/zadara/values-aws-load-balancer-controller-for-certs.yaml
       fi
     fi
 

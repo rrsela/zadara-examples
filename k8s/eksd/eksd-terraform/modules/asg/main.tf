@@ -35,6 +35,7 @@ data "cloudinit_config" "this" {
       vpc_id                = var.vpc_id
       install_autoscaler    = var.install_autoscaler
       install_kasten_k10    = var.install_kasten_k10
+      root_ca_cert          = var.root_ca_cert
     })
   }
 
