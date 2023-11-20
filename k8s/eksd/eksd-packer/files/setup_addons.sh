@@ -76,6 +76,14 @@ sudo helm template aws-ebs-csi-driver/aws-ebs-csi-driver | grep image: | sed 's/
 cat <<EOF | sudo tee /etc/kubernetes/zadara/values-aws-ebs-csi-driver.yaml
 controller:
   region: 'us-east-1'
+  volumes:
+    - name: trusted-root-cas
+      hostPath:
+        path: /etc/ssl/certs/ca-certificates.crt
+        type: File
+  volumeMounts:
+    - name: trusted-root-cas
+      mountPath: /etc/ssl/certs/zadara-ca.crt
 sidecars:
   provisioner:
     additionalArgs:
@@ -112,6 +120,14 @@ enableWafv2: false
 region: us-east-1
 ingressClassConfig:
   default: true
+extraVolumes:
+  - name: trusted-root-cas
+    hostPath:
+      path: /etc/ssl/certs/ca-certificates.crt
+extraVolumeMounts:
+  - name: trusted-root-cas
+    mountPath: /etc/ssl/certs/zadara-ca.crt
+    readonly: true
 EOF
 
 # Cluster Autoscaler
@@ -126,9 +142,15 @@ extraVolumes:
   - name: cloud-config
     configMap:
       name: cloud-config
+  - name: trusted-root-cas
+    hostPath:
+      path: /etc/ssl/certs/ca-certificates.crt
 extraVolumeMounts:
   - name: cloud-config
     mountPath: config
+  - name: trusted-root-cas
+    mountPath: /etc/ssl/certs/zadara-ca.crt
+    readonly: true
 tolerations:
 - effect: NoSchedule
   key: node-role.kubernetes.io/control-plane
