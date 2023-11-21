@@ -82,9 +82,3 @@ variable "masters_load_balancer_public_ip" {
   default     = ""
   description = "Public IP of the NLB - to be populated automatically"
 }
-
-variable "root_ca_cert_path" {
-  type        = string
-  default     = ""
-  description = "Path to the root certificate authority certificate of the cluster"
-}

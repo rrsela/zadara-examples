@@ -12,7 +12,6 @@ sudo helm repo add autoscaler https://kubernetes.github.io/autoscaler
 sudo helm repo add kasten https://charts.kasten.io
 sudo helm repo update
 
-
 # General cloud-config
 cat <<EOF | sudo tee /etc/kubernetes/zadara/cloud-config.yaml
 apiVersion: v1
@@ -57,7 +56,7 @@ sudo cat /etc/kubernetes/zadara/kube-flannel.yml | grep image: | sed 's/image://
 CALICO_VERSION=$(curl -s -L https://api.github.com/repos/projectcalico/calico/releases/latest | jq -r '.tag_name')
 sudo wget -qO /etc/kubernetes/zadara/tigera-operator.yaml https://raw.githubusercontent.com/projectcalico/calico/${CALICO_VERSION}/manifests/tigera-operator.yaml
 sudo cat /etc/kubernetes/zadara/tigera-operator.yaml | grep image: | sed 's/image://' | sed 's/"//g' | sudo xargs -I % ctr --namespace k8s.io images pull %
-sudo wget -qO /etc/kubernetes/zadara/custom-resources.yaml https://raw.githubusercontent.com/projectcalico/calico/${CALICO_VERSION}/manifests/custom-resources.yaml 
+sudo wget -qO /etc/kubernetes/zadara/custom-resources.yaml https://raw.githubusercontent.com/projectcalico/calico/${CALICO_VERSION}/manifests/custom-resources.yaml
 CILIUM_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
 sudo curl -s -L -o /etc/kubernetes/zadara/cilium-linux-amd64.tar.gz https://github.com/cilium/cilium-cli/releases/download/${CILIUM_VERSION}/cilium-linux-amd64.tar.gz{,.sha256sum}
 
@@ -84,6 +83,7 @@ controller:
   volumeMounts:
     - name: trusted-root-cas
       mountPath: /etc/ssl/certs/zadara-ca.crt
+      readonly: true
 sidecars:
   provisioner:
     additionalArgs:
