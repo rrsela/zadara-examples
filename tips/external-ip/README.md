@@ -19,7 +19,7 @@ kubectl get service wordpress-1700633749 -n wp -o jsonpath='{.status.loadBalance
 
 Once we have the public DNS of the Load Balancer (either manually or programmatically), which we will use to populate the `PUBLIC_DNS` parameter in the below command before running it:
 ```shell
-kubectl run aws --image amazon/aws-cli --restart=Never --rm -i --env PUBLIC_DNS=elb-ad7071e0-4d9c-4e7d-8478-0dc10241fecd.elb.services.symphony.public \
+kubectl run -q aws --image amazon/aws-cli --restart=Never --rm -i --env PUBLIC_DNS=elb-ad7071e0-4d9c-4e7d-8478-0dc10241fecd.elb.services.symphony.public \
     --command -- /bin/bash << EOF
         yum install -y -q jq
         aws ec2 describe-network-interfaces \
@@ -36,6 +36,4 @@ This command will do the below:
 * Find out the private IP of the private DNS equivalent of the public DNS
 * Invoke the AWS CLI command to find the public IP linked with the private IP
 
-The output should contain the external IP of the Load Balancer, as well as a message about the pod deletion - for example: \
-172.16.20.62 \
-pod "aws" deleted
+The output will be the external IP of the Load Balancer.
